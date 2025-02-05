@@ -34,14 +34,19 @@ public class ExpenseTrackerCli {
 
     private static void handleUserInput(int option) {
         ExpenseService service = new ExpenseService();
+        List<Expense> expenseList;
+        int id;
+        double amount;
+        String description;
+
         switch (option) {
             case 1:
                 System.out.println("Enter expense:");
-                double expense = input.nextDouble();
+                amount = input.nextDouble();
                 System.out.println("Enter description:");
-                String description = input.next();
+                description = input.nextLine();
                 try {
-                    service.addExpense(expense, description);
+                    service.addExpense(amount, description);
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
                 }
@@ -49,14 +54,55 @@ public class ExpenseTrackerCli {
                 break;
             case 2:
                 System.out.println("Here is the list of all Expenses:");
-                List<Expense> expenseList =  service.getAllExpenses();
+                expenseList =  service.getAllExpenses();
                 System.out.println("Total expenses added: " + expenseList.size());
                 System.out.println("Expense list:");
                 for(Expense exp :expenseList)
                 {
                     System.out.println(exp.toString());
                 }
-
+                break;
+            case 3:
+                System.out.println("Here is the list of all Expenses:");
+                expenseList = service.getAllExpenses();
+                System.out.println(service.getAllExpenses());
+                if(!expenseList.isEmpty()) {
+                    System.out.println("Expense list:");
+                    while (true) {
+                        System.out.println("Enter the id of Expense you want to edit:");
+                        id = input.nextInt();
+                        if (id>0 & id<expenseList.size()) {
+                            System.out.println("Enter description:");
+                            description = input.nextLine();
+                            description= description+ input.nextLine();
+                            System.out.println("Enter amount:");
+                            amount = input.nextDouble();
+                            Expense exp = expenseList.get(id);
+                            exp.setDescription(description);
+                            exp.setAmount(amount);
+                            service.updateExpense(exp);
+                            System.out.println("Expense edited successfully");
+                            break;
+                        }
+                        else {
+                            System.out.println("Expense not found. Kindly try again");
+                            System.out.println("Do you want to continue? (Y/N)");
+                            String answer = input.next();
+                            if(answer.equalsIgnoreCase("Y")) {
+                            }
+                            else if(answer.equalsIgnoreCase("N")) {
+                                break;
+                            }
+                            else {
+                                System.out.println("It wasn't a valid option. Going back to main menu");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    System.out.println("Sorry, Expense list is empty. Kindly add new expense first.");
+                }
                 break;
 
         }

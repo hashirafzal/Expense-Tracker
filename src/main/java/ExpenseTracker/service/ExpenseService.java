@@ -7,16 +7,24 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class ExpenseService {
-
+    ExpenseRepo expRepo = new ExpenseRepo();
     public void addExpense(double expense, String description) throws URISyntaxException {
 
-        ExpenseRepo expRepo = new ExpenseRepo();
+
         expRepo.saveExpense(expense,description);
 
     }
 
     public List<Expense> getAllExpenses() {
-        ExpenseRepo expRepo = new ExpenseRepo();
         return expRepo.retrieveAllExpense();
+    }
+
+    public void updateExpense(Expense exp) {
+
+        List<Expense> expList = expRepo.retrieveAllExpense();
+        expList.add(exp.getId(),exp);
+
+        expRepo.saveAllExpense(expList);
+
     }
 }
