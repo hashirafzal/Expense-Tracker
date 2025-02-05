@@ -29,10 +29,9 @@ public class ExpenseRepo {
 
     public List<Expense> retrieveAllExpense() {
         List<Expense> expenseList = new ArrayList<Expense>();
-
         try(BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))){
             String line ;
-            while((line =reader.readLine() )!= null)
+            while((line = reader.readLine() )!= null)
             {
                 expenseList.add(Expense.fromCsv(line));
             }
@@ -41,8 +40,20 @@ public class ExpenseRepo {
         {
             e.printStackTrace();
         }
-
-
         return expenseList;
+    }
+
+    public void saveAllExpense(List<Expense> expList) {
+    try(BufferedWriter bfw = new BufferedWriter(new FileWriter(CSV_FILE)))
+    {
+        for(Expense exp : expList)
+        {
+            bfw.write(exp.toCsv());
+        }
+    }catch (IOException e)
+    {
+        e.printStackTrace();
+    }
+
     }
 }
