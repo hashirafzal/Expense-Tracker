@@ -125,6 +125,7 @@ public class ExpenseTrackerCli {
                 else{
                     System.out.println("Expense not found. Kindly try again");
                 }
+                break;
             case 5:
                 System.out.println("Here is the list of all Expenses:");
                 expenseList = service.getAllExpenses();
