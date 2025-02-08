@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ExpenseService {
     ExpenseRepo expRepo = new ExpenseRepo();
-    public void addExpense(double expense, String description) throws URISyntaxException {
+    public void addExpense(int expense, String description) throws URISyntaxException {
 
 
         expRepo.saveExpense(expense,description);
@@ -22,9 +22,18 @@ public class ExpenseService {
     public void updateExpense(Expense exp) {
 
         List<Expense> expList = expRepo.retrieveAllExpense();
+        expList.remove(exp.getId());
         expList.add(exp.getId(),exp);
 
         expRepo.saveAllExpense(expList);
 
+    }
+
+    public void deleteExpense(int id) {
+        expRepo.deleteExpense(id);
+    }
+
+    public void deleteAllExpenses() {
+            expRepo.deleteAllExpenses();
     }
 }

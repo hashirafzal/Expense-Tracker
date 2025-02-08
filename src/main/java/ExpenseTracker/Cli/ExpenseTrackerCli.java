@@ -20,15 +20,12 @@ public class ExpenseTrackerCli {
            System.out.println("1. Add Expense");
            System.out.println("2. Show all Expenses");
            System.out.println("3. Edit Expense");
-           System.out.println("4. Delete Expense");
-           System.out.println("5. Exit");
+           System.out.println("4. Delete a single Expense");
+           System.out.println("5. Delete All Expenses");
+           System.out.println("6. Exit");
 
            int option = input.nextInt();
            handleUserInput(option);
-           if(option == 5) {
-               System.out.println("Exiting Application\nThank you for using Expense Tracker");
-               break;
-           }
        }
     }
 
@@ -36,15 +33,18 @@ public class ExpenseTrackerCli {
         ExpenseService service = new ExpenseService();
         List<Expense> expenseList;
         int id;
-        double amount;
+        int amount;
         String description;
 
         switch (option) {
             case 1:
-                System.out.println("Enter expense:");
-                amount = input.nextDouble();
+                input.nextLine();
                 System.out.println("Enter description:");
                 description = input.nextLine();
+                System.out.println("Enter expense amount:");
+                amount = input.nextInt();
+
+
                 try {
                     service.addExpense(amount, description);
                 } catch (URISyntaxException e) {
@@ -55,28 +55,35 @@ public class ExpenseTrackerCli {
             case 2:
                 System.out.println("Here is the list of all Expenses:");
                 expenseList =  service.getAllExpenses();
+                if(expenseList.isEmpty()) {
+                    System.out.println("No expenses found");
+                }
+                else
+                {
+
                 System.out.println("Total expenses added: " + expenseList.size());
                 System.out.println("Expense list:");
                 for(Expense exp :expenseList)
                 {
                     System.out.println(exp.toString());
                 }
+                }
                 break;
             case 3:
                 System.out.println("Here is the list of all Expenses:");
                 expenseList = service.getAllExpenses();
-                System.out.println(service.getAllExpenses());
+                System.out.println(expenseList);
                 if(!expenseList.isEmpty()) {
                     System.out.println("Expense list:");
                     while (true) {
                         System.out.println("Enter the id of Expense you want to edit:");
                         id = input.nextInt();
-                        if (id>0 & id<expenseList.size()) {
+                        if (id>=0 & id<expenseList.size()) {
                             System.out.println("Enter description:");
                             description = input.nextLine();
                             description= description+ input.nextLine();
                             System.out.println("Enter amount:");
-                            amount = input.nextDouble();
+                            amount = input.nextInt();
                             Expense exp = expenseList.get(id);
                             exp.setDescription(description);
                             exp.setAmount(amount);
@@ -103,6 +110,34 @@ public class ExpenseTrackerCli {
                 else {
                     System.out.println("Sorry, Expense list is empty. Kindly add new expense first.");
                 }
+                break;
+            case 4:
+                System.out.println("Here is the list of all Expenses:");
+                expenseList = service.getAllExpenses();
+                System.out.println("Expense list:");
+                System.out.println(expenseList);
+                System.out.println("Enter the id of Expense you want to delete:");
+                id = input.nextInt();
+                if(id>=0 & id<expenseList.size()) {
+                service.deleteExpense(id);
+                System.out.println("Expense deleted successfully");
+                }
+                else{
+                    System.out.println("Expense not found. Kindly try again");
+                }
+            case 5:
+                System.out.println("Here is the list of all Expenses:");
+                expenseList = service.getAllExpenses();
+                System.out.println(expenseList);
+                System.out.println("Are you sure you want to delete all expenses?");
+                String answer = input.next();
+                if(answer.equalsIgnoreCase("Y")) {
+                    service.deleteAllExpenses();
+                }
+                break;
+
+            case 6:
+                System.out.println("Exiting Application\nThank you for using Expense Tracker");
                 break;
 
         }
